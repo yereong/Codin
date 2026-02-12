@@ -1,102 +1,101 @@
+<div align='center'>
+  <img width="128" height="128" alt="image" src="https://github.com/user-attachments/assets/701407ec-1611-4252-976c-ae2d1e425e7f" />
+</div>
 
-
-# ![스크린샷 2025-02-03 오후 9 27 05 1](https://github.com/user-attachments/assets/eb0eb25f-b23e-4992-a4f5-62199b1a27f2) _ FrontEnd 
-
-
-## 👀 주요 화면
-
-<p align="left">
-  <img src="https://github.com/user-attachments/assets/ad94223a-dcb7-469a-ad29-42b3974c02ec" width="20%" />
-  <img src="https://github.com/user-attachments/assets/a919c059-9d1d-4e67-9e98-cdf5002fc0a4" width="20%" />
-  <img src="https://github.com/user-attachments/assets/0cf7aefb-2ddc-4299-bd50-213ae643f4ab" width="20%" />
+<p align="center">
+인천대학교 정보기술대학 학생들을 위한 교내 SNS · 편의 기능 서비스<br/>
+빈 강의실 · 간식나눔 티켓팅 · 익명채팅/투표 기능을 운영 중인 실서비스입니다.
 </p>
 
-
-## 🕰️ 개발 기간
-* 24.11.06 ~ 진행 중
-
-## ⚙️ 개발 환경
-- `NextJS & ReactNative`
-- **IDE** : VisualStudio Code
-
-## 🧑‍🤝‍🧑 맴버구성
-<p>
-    <a href="https://github.com/SooHwanIT">
-      SooHwanIT
-    </a>
-    <br>
-    <a href="https://github.com/yereong">
-      yereong
-    </a>
-    <br>
-    <a href="https://github.com/ParkKyungWan">
-      ParkKyungWan
-    </a>
+<p align="center">
+  <a href="https://github.com/yereong/Codin">GitHub</a> ·
+  <a href="https://codin.inu.ac.kr/login">Web</a> ·
+  <a href="https://play.google.com/store/apps/details?id=com.codin_android_app&hl=ko">Google Play</a> ·
+  <a href="https://apps.apple.com/kr/app/codin/id6742378374">App Store</a>
 </p>
 
-## 📝 규칙
-- `커밋 컨벤션`
-  - Feat : 새로운 기능 추가, 기존의 기능을 요구 사항에 맞추어 수정
-  - Fix : 기능에 대한 버그 수정
-  - Perf : 기능 개선
-  - Build : 빌드 관련 수정
-  - Chore : 패키지 매니저 수정, 그 외 기타 수정 ex) .gitignore
-  - CI : CI 관련 설정 수정
-  - Docs : 문서(주석) 수정
-  - Style : 코드 스타일, 포맷팅에 대한 수정
-  - Refactor : 기능의 변화가 아닌 코드 리팩링 ex) 변수 이름 변경
-  - Test : 테스트 코드 추가
-  - Release : 버전 릴리즈
-  - 
-<br>
+> ⚠️ 서비스는 학교 이메일로만 로그인 가능합니다.
 
-- `issue 규칙`
-    - 템플릿
-        - issue 제목
-            - 예시: **[feat] 이슈 정리**
-        - issue 템플릿
-            ```markdown
-            ## 📋 이슈 내용
-            
-            ## ✅ 체크리스트
-            
-            ## 📚 레퍼런스
-            
-            ```
-<br>
+---
 
-- `branch 규칙`
-    - 각자의 깃 닉네임을 딴 branch 명을 사용한다.
-    - 예시
-        - git checkout -b feature/세부사항
-        - git checkout -b feature/sc-화면번호-세부
+## 📌 Overview
+<img width=auto height="350" alt="image" src="https://github.com/user-attachments/assets/3d9e603f-2a3f-49c9-9606-372b74eae0d5" />
+<img width=auto height="350" alt="image" src="https://github.com/user-attachments/assets/b3967a86-a1d1-49a6-b7e2-f2456b0c7e95" />
+<img width=auto height="350" alt="image" src="https://github.com/user-attachments/assets/caaa4583-f6a8-4b37-b08a-31d62b8f672b" />
+<img width=auto height="350" alt="image" src="https://github.com/user-attachments/assets/1cc24ec9-1a28-4d17-ae7b-6cc719b13eee" />
 
-<br>
 
-- `commit message 규칙`
-    - 종류: 메시지
-    - 예시
-        - \[feat\] 회원 관리 API 엔티티 구현
-        - \[fix\] 회원 조회 서비스 에러 수정 
-<br>
 
-- `PR 규칙`
-    - PR 템플릿
 
-        ```markdown
-        
-        ## 🛠 구현 사항
-        
-        ## 📚 기타
-        
-        ```
-        <br>
+**CodIN**은 인천대학교 정보기술대학 학생들을 위한 SNS 기반 서비스입니다.  
+교내 공모전에서 시작하여 학생 편의를 위한 기능을 확장하며 현재 실서비스 운영 중입니다.
 
-- `DTO 규칙`
-    - 엔티티명 + Response/Request + DTO
-    - 예시
-        - UserResponseDTO
-        - PostRequestDTO
+- 실사용자 약 200명
+- 학생회 간식나눔 이벤트를 티켓팅 기능으로 실제 운영
+- 학장님 미팅 후 장학금 지원
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- TypeScript
+- Next.js
+- Tailwind CSS
+- Zustand
+
+### Real-time
+- SSE
+- STOMP (WebSocket)
+
+---
+
+## ⚙️ Core Features
+
+| 기능 | 설명 |
+|------|------|
+| 🔐 로그인 | Google OAuth |
+| 🏠 메인화면 | 학사 일정, 빈 강의실 현황, 인기 게시물 |
+| 🎫 간식나눔 티켓팅 | 선착순 배부 시스템 |
+| 📊 관리자 화면 | 수령 여부 변경, 수령자 Excel 다운로드 |
+| ✉️ 익명채팅 | STOMP 기반 실시간 채팅 |
+| 🗳️ 익명투표 | 투표 작성/참여/결과 확인 |
+| 📚 교과목 검색 | 평점 및 리뷰 기반 추천 |
+
+> 로그인, 티켓팅, 익명채팅, 익명투표, 마이페이지를 맡아 개발하였습니다.
+---
+
+## 🏗 Architecture
+
+> Next.js 기반 프론트엔드 + API 서버 연동  
+> 실시간 기능: **SSE**, **STOMP(WebSocket)**
+
+<img width="805" height="554" alt="image" src="https://github.com/user-attachments/assets/6335a984-48b8-4c04-a592-e6b92af4a7eb" />
 
 
 ---
+
+## 📈 Result
+
+- 간식나눔 이벤트 오픈 직후 100개 중 약 80개가 5초 내 소진
+- 티켓팅 기능에 대한 학생/학생회 긍정 피드백 확보
+- 실제 사용자 약 200명 확보
+- 실서비스 운영 경험
+
+---
+
+## 🤔 Retrospective
+
+- STOMP 기반 실시간 알림 및 읽음 처리 구현 경험
+- 실제 사용자 환경에서 테스트의 중요성 체감
+- 팀원 변동 속 문서화의 중요성 인식
+- SSR을 고려해 Next.js 선택 → 추후 SSR 마이그레이션 예정
+
+---
+
+## 👩🏻‍💻 Contribution
+
+- Next.js 기반 프론트엔드 기능 개발
+- 티켓팅 기능 및 상태 관리(Zustand) 구현
+- 실시간 기능(STOMP) 연동
+- 로그인 및 리다이렉트 로직 개선
