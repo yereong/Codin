@@ -10,13 +10,13 @@ export interface Board {
     name: string;
     icon?: string;
     tabs: Tab[];
-    type: 'list' | 'gallery'; // 게시판 유형: 'list' 또는 'gallery'
+    type: 'list' | 'gallery' | 'poll'; // 게시판 유형: 'list' 또는 'gallery'
     backLink?: string; // 뒤로가기 URL (옵션)
 }
 
 export const boardData: Record<string, Board> = {
     'need-help': {
-        name: '모집해요',
+        name: '구해요',
         backLink: '/main', // 뒤로가기 시 이동할 URL
         tabs: [
             { label: '전체', value: 'all', postCategory: 'REQUEST' },
@@ -64,4 +64,34 @@ export const boardData: Record<string, Board> = {
         ],
         type: 'gallery',
     },
+    'ticketing': {
+        name: '간식나눔',
+        backLink: '/ticketing',
+        tabs: [
+            { label: '송도캠', value: 'songdo', postCategory: 'SONGDO_CAMPUS' },
+            { label: '미추홀캠', value: 'Michuhol', postCategory: 'MICHUHOL_CAMPUS' },
+        ],
+        type: 'gallery',
+    },
+
+     'ticketingAdmin': {
+        name: '간식나눔 행사 관리',
+        backLink: '/ticketing/admin',
+        tabs: [
+            { label: '전체', value: 'all', postCategory: 'all' },
+            { label: '진행 중', value: 'open', postCategory: 'open' },
+            { label: '진행 완료', value: 'ended', postCategory: 'ended' },
+        ],
+        type: 'gallery',
+    },
+
+    'myTicketing': {
+        name: '티켓팅 내역',
+        tabs: [
+            { label: '간식 미수령', value: 'wating', postCategory: 'WAITING' },
+            { label: '사용 완료', value: 'completed', postCategory: 'COMPLETED' },          
+            { label: '티켓팅 취소', value: 'canceled', postCategory: 'CANCELED' },
+        ],
+        type: 'gallery',
+    }
 };

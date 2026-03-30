@@ -1,66 +1,52 @@
 'use client';
 import React, { useState, useRef } from "react";
 import Image from "next/image";
-import { IoClose } from "react-icons/io5"; // React Icons에서 닫기 아이콘 사용
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // 좌우 화살표 아이콘
+import { IoClose } from "react-icons/io5";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 interface ZoomableImageModalProps {
-    images: string | string[]; // 단일 이미지 또는 이미지 배열
+    images: string | string[];
+    mode?: "list" | "banner"; // 기본값: list
 }
 
-const ZoomableImageModal: React.FC<ZoomableImageModalProps> = ({ images }) => {
-    // 이미지를 배열 형태로 통일
+const ZoomableImageModal: React.FC<ZoomableImageModalProps> = ({
+                                                                   images,
+                                                                   mode = "list",
+                                                               }) => {
     const imageArray = Array.isArray(images) ? images : [images];
+
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [modalIndex, setModalIndex] = useState(0);
+    const openModal = (index: number) => {
+        setModalIndex(index);
+        setIsModalOpen(true);
+    };
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
     const [scale, setScale] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [dragging, setDragging] = useState(false);
     const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
-    const lastTouchDistance = useRef(null);
-
-    const openModal = (index) => {
-        setCurrentIndex(index);
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setScale(1);
-        setPosition({ x: 0, y: 0 });
-    };
-
-    const goToNextImage = () => {
-        if (currentIndex < imageArray.length - 1) {
-            setCurrentIndex(currentIndex + 1);
-            resetZoom();
-        }
-    };
-
-    const goToPrevImage = () => {
-        if (currentIndex > 0) {
-            setCurrentIndex(currentIndex - 1);
-            resetZoom();
-        }
-    };
+    const lastTouchDistance = useRef<number | null>(null);
 
     const resetZoom = () => {
         setScale(1);
         setPosition({ x: 0, y: 0 });
     };
 
-    // 마우스 또는 터치 드래그 핸들러
-    const handleMouseDown = (e) => {
+    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
         setDragging(true);
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+        const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
         setStartPosition({ x: clientX - position.x, y: clientY - position.y });
     };
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
         if (!dragging) return;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+        const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
         setPosition({
             x: clientX - startPosition.x,
             y: clientY - startPosition.y,
@@ -69,14 +55,12 @@ const ZoomableImageModal: React.FC<ZoomableImageModalProps> = ({ images }) => {
 
     const handleMouseUp = () => setDragging(false);
 
-    // 핀치 줌 핸들러
-    const handleTouchMove = (e) => {
+    const handleTouchMove = (e: React.TouchEvent) => {
         if (e.touches.length === 2) {
             const touchDistance = Math.hypot(
                 e.touches[0].clientX - e.touches[1].clientX,
                 e.touches[0].clientY - e.touches[1].clientY
             );
-
             if (lastTouchDistance.current) {
                 const zoomDelta = touchDistance / lastTouchDistance.current;
                 setScale((prev) => Math.min(5, Math.max(1, prev * zoomDelta)));
@@ -92,43 +76,89 @@ const ZoomableImageModal: React.FC<ZoomableImageModalProps> = ({ images }) => {
         handleMouseUp();
     };
 
+    const [bannerIndex, setBannerIndex] = useState(0);
+    const goToNextBanner = () => {
+        setBannerIndex((prev) => (prev + 1) % imageArray.length);
+    };
+    const goToPrevBanner = () => {
+        setBannerIndex((prev) =>
+            prev === 0 ? imageArray.length - 1 : prev - 1
+        );
+    };
+
     return (
         <div>
-            {imageArray.length === 1 ? (
-                // 이미지가 하나일 경우 상위 컴포넌트에 꽉 차게 표시
-                <div className="w-full h-full flex items-center justify-center">
-                    <Image
-                        src={imageArray[0]}
-                        alt="Single Image"
-                        layout="responsive"
-                        width={800}
-                        height={600}
-                        className="object-cover rounded-lg" // rounded-lg 추가
-                        onClick={() => openModal(0)}
-                    />
-                </div>
-            ) : (
-                // 가로 스크롤 이미지 리스트
-                <div className="flex overflow-x-auto space-x-2 p-2 bg-gray-200 rounded">
-                    {imageArray.map((imageUrl, index) => (
-                        <div
-                            key={index}
-                            className="w-32 h-32 flex-shrink-0 relative cursor-pointer"
-                            onClick={() => openModal(index)}
-                        >
+            {mode === "list" && (
+                <>
+                    {imageArray.length === 1 ? (
+                        <div className="w-full h-full flex items-center justify-center">
                             <Image
-                                src={imageUrl}
-                                alt={`Thumbnail ${index}`}
-                                layout="fill"
-                                objectFit="cover"
-                                className="rounded"
+                                src={imageArray[0]}
+                                alt="Single Image"
+                                layout="responsive"
+                                width={800}
+                                height={600}
+                                className="object-cover rounded-lg"
+                                onClick={() => openModal(0)}
                             />
                         </div>
-                    ))}
+                    ) : (
+                        <div className="flex overflow-x-auto space-x-2 p-2 bg-gray-200 rounded">
+                            {imageArray.map((imageUrl, index) => (
+                                <div
+                                    key={index}
+                                    className="w-32 h-32 flex-shrink-0 relative cursor-pointer"
+                                    onClick={() => openModal(index)}
+                                >
+                                    <Image
+                                        src={imageUrl}
+                                        alt={`Thumbnail ${index}`}
+                                        layout="fill"
+                                        objectFit="cover"
+                                        className="rounded"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </>
+            )}
+
+            {mode === "banner" && (
+                <div className="relative w-full h-[400px] bg-black overflow-hidden">
+                    <div
+                        className="w-full h-full flex transition-transform duration-300"
+                        style={{
+                            transform: `translateX(-${bannerIndex * 100}%)`,
+                        }}
+                    >
+                        {imageArray.map((imgUrl, index) => (
+                            <div key={index} className="w-full flex-shrink-0 relative">
+                                <Image
+                                    src={imgUrl}
+                                    alt={`Banner Image ${index + 1}`}
+                                    layout="fill"
+                                    objectFit="cover"
+                                />
+                            </div>
+                        ))}
+                    </div>
+
+                    <button
+                        onClick={goToPrevBanner}
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-3 text-white"
+                    >
+                        <FaChevronLeft size={20} />
+                    </button>
+                    <button
+                        onClick={goToNextBanner}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 rounded-full p-3 text-white"
+                    >
+                        <FaChevronRight size={20} />
+                    </button>
                 </div>
             )}
 
-            {/* 모달 */}
             {isModalOpen && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
@@ -136,11 +166,11 @@ const ZoomableImageModal: React.FC<ZoomableImageModalProps> = ({ images }) => {
                 >
                     <div
                         className="relative border-4 border-white bg-gray-400"
-                        onClick={(e) => e.stopPropagation()} // 부모 클릭 방지
+                        onClick={(e) => e.stopPropagation()}
                         style={{
                             cursor: dragging ? "grabbing" : "grab",
                             overflow: "hidden",
-                            touchAction: "none", // 터치 제스처 활성화
+                            touchAction: "none",
                         }}
                         onMouseDown={handleMouseDown}
                         onMouseMove={handleMouseMove}
@@ -149,55 +179,53 @@ const ZoomableImageModal: React.FC<ZoomableImageModalProps> = ({ images }) => {
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
                     >
-                        {/* 닫기 버튼 */}
                         <button
                             onClick={closeModal}
-                            className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-2"
-                            style={{
-                                cursor: "pointer",
-                                zIndex: 100, // 이미지 위에 버튼 표시
-                            }}
+                            className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-2 z-50"
+                            style={{ cursor: "pointer" }}
                         >
                             <IoClose size={24} />
                         </button>
 
-                        {/* 좌우 화살표 */}
                         {imageArray.length > 1 && (
                             <>
                                 <button
-                                    onClick={goToPrevImage}
+                                    onClick={() => {
+                                        if (modalIndex > 0) {
+                                            setModalIndex(modalIndex - 1);
+                                            resetZoom();
+                                        }
+                                    }}
                                     className={`absolute left-2 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full p-3 ${
-                                        currentIndex === 0
+                                        modalIndex === 0
                                             ? "opacity-50 cursor-not-allowed"
                                             : "cursor-pointer"
                                     }`}
-                                    disabled={currentIndex === 0}
-                                    style={{
-                                        cursor: "pointer",
-                                        zIndex: 100, // 이미지 위에 버튼 표시
-                                    }}
+                                    disabled={modalIndex === 0}
+                                    style={{ zIndex: 100 }}
                                 >
                                     <FaChevronLeft size={20} />
                                 </button>
                                 <button
-                                    onClick={goToNextImage}
+                                    onClick={() => {
+                                        if (modalIndex < imageArray.length - 1) {
+                                            setModalIndex(modalIndex + 1);
+                                            resetZoom();
+                                        }
+                                    }}
                                     className={`absolute right-2 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full p-3 ${
-                                        currentIndex === imageArray.length - 1
+                                        modalIndex === imageArray.length - 1
                                             ? "opacity-50 cursor-not-allowed"
                                             : "cursor-pointer"
                                     }`}
-                                    disabled={currentIndex === imageArray.length - 1}
-                                    style={{
-                                        cursor: "pointer",
-                                        zIndex: 100, // 이미지 위에 버튼 표시
-                                    }}
+                                    disabled={modalIndex === imageArray.length - 1}
+                                    style={{ zIndex: 100 }}
                                 >
                                     <FaChevronRight size={20} />
                                 </button>
                             </>
                         )}
 
-                        {/* 이미지 */}
                         <div
                             style={{
                                 transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
@@ -206,8 +234,8 @@ const ZoomableImageModal: React.FC<ZoomableImageModalProps> = ({ images }) => {
                             }}
                         >
                             <Image
-                                src={imageArray[currentIndex]}
-                                alt={`Image ${currentIndex + 1}`}
+                                src={imageArray[modalIndex]}
+                                alt={`Image ${modalIndex + 1}`}
                                 layout="intrinsic"
                                 width={800}
                                 height={600}
